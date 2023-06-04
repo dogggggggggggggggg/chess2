@@ -1,16 +1,20 @@
 package org.example;
 
+import java.awt.*;
+import java.util.ArrayList;
+
 public class Bishop implements Pieces {
     private char color;
     Bishop(char color){
         this.color = color;
     }
-    public void move(String location){
+    public ArrayList<Point> move(String location){
         if (color == 'W'){
 
         } else {
 
         }
+        return null;
     }
     public char getColor() {
         return color;
