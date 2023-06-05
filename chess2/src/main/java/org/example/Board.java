@@ -12,6 +12,19 @@ public class Board {
     Pieces[][] boardArray = new Pieces[8][8];
     Color brown = new Color(193, 154, 107);
     int temp;
+
+    ImageIcon rookBlack = new ImageIcon(ClassLoader.getSystemResource("Rook_B.png"));
+    ImageIcon rookWhite = new ImageIcon(ClassLoader.getSystemResource("Rook_W.png"));
+    ImageIcon bishopBlack = new ImageIcon(ClassLoader.getSystemResource("Bishop_B.png"));
+    ImageIcon bishopWhite = new ImageIcon(ClassLoader.getSystemResource("Bishop_W.png"));
+    ImageIcon kingBlack = new ImageIcon(ClassLoader.getSystemResource("King_B.png"));
+    ImageIcon kingWhite = new ImageIcon(ClassLoader.getSystemResource("King_W.png"));
+    ImageIcon knightBlack = new ImageIcon(ClassLoader.getSystemResource("Knight_B.png"));
+    ImageIcon knightWhite = new ImageIcon(ClassLoader.getSystemResource("Knight_W.png"));
+    ImageIcon pawnBlack = new ImageIcon(ClassLoader.getSystemResource("Pawn_B.png"));
+    ImageIcon pawnWhite = new ImageIcon(ClassLoader.getSystemResource("Pawn_W.png"));
+    ImageIcon queenBlack = new ImageIcon(ClassLoader.getSystemResource("Queen_B.png"));
+    ImageIcon queenWhite = new ImageIcon(ClassLoader.getSystemResource("Queen_W.png"));
     public Board() {
         boardPanel.setLayout(new GridLayout(8,8));
 
@@ -36,7 +49,7 @@ public class Board {
                        switch (row) {
                            case 0, 7 -> {
                                boardArray[row][col] = new Rook('W');
-                               label.setText("Rook");
+                               field.setIcon(rookWhite);
                            }
                            case 1, 6 -> {
                                boardArray[row][col] = new Knight('W');
@@ -55,19 +68,19 @@ public class Board {
                                    }
 
                                });
-                               label.setText("Knight");
+                               field.setIcon(knightWhite);
                            }
                            case 2, 5 -> {
                                boardArray[row][col] = new Bishop('W');
-                               label.setText("Bishop");
+                               field.setIcon(bishopWhite);
                            }
                            case 3 -> {
                                boardArray[row][col] = new Queen('W');
-                               label.setText("Queen");
+                               field.setIcon(queenWhite);
                            }
                            case 4 -> {
                                boardArray[row][col] = new King('W');
-                               label.setText("King");
+                               field.setIcon(kingWhite);
                            }
                            default -> {
                                boardArray[row][col] = new None('N');
@@ -77,33 +90,33 @@ public class Board {
                        break;
                    case 1:
                        boardArray[row][col] = new Pawn('W');
-                       label.setText("Pawn");
+                       field.setIcon(pawnWhite);
                        break;
                    case 6:
                        boardArray[row][col] = new Pawn('B');
-                       label.setText("Pawn");
+                       field.setIcon(pawnBlack);
                        break;
                    case 7:
                        switch (row) {
                            case 0, 7 -> {
                                boardArray[row][col] = new Rook('B');
-                               label.setText("Rook");
+                               field.setIcon(rookBlack);
                            }
                            case 1, 6 -> {
                                boardArray[row][col] = new Knight('B');
-                               label.setText("Knight");
+                               field.setIcon(knightBlack);
                            }
                            case 2, 5 -> {
                                boardArray[row][col] = new Bishop('B');
-                               label.setText("Bishop");
+                               field.setIcon(bishopBlack);
                            }
                            case 3 -> {
                                boardArray[row][col] = new Queen('B');
-                               label.setText("Queen");
+                               field.setIcon(queenBlack);
                            }
                            case 4 -> {
                                boardArray[row][col] = new King('B');
-                               label.setText("King");
+                               field.setIcon(kingBlack);
                            }
                            default -> {
                                boardArray[row][col] = new None('N');
@@ -119,8 +132,6 @@ public class Board {
             }
         }
 
-
-
         windowFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         windowFrame.add(boardPanel);
         windowFrame.setSize(1024,1024);
@@ -128,43 +139,74 @@ public class Board {
     }
 
     private void refresh(){
+
         Component[] componentList = boardPanel.getComponents();
         for (Component current : componentList){
             boardPanel.remove(current);
         }
+
         for(int col = 0; col < 8; col++, temp++) {
             for (int row = 0; row < 8; row++, temp++) {
                 JButton field = new JButton();
                 field.setBorderPainted(false);
-                JLabel label = new JLabel(boardArray[row][col].getClass().getName().substring(12));
-                switch (label.getText()){
-                    case "Pawn":
-                        break;
-                    case "Knight":
-                      field.addActionListener(e -> {
-                          int row2 = Integer.parseInt(field.getName().substring(0,1));
-                          int col2 = Integer.parseInt(field.getName().substring(1,2));
-                          ArrayList<Point> selectedMoveset = boardArray[row2][col2].move(field.getName());
-                          for (Point point : selectedMoveset) {
-                              int rowNew = (int) point.getX();
-                              int colNew = (int) point.getY();
-                              refresh();
-                              if (boardArray[rowNew][colNew].getColor() == 'N' || boardArray[rowNew][colNew].getColor() == 'B') {
-                                  boardArray[rowNew][colNew] = new Knight('W');
-                              }
 
-                          }
-                      });
-                        break;
-                    case "Bishop":
-                        break;
-                    case "Queen":
-                        break;
-                    case "King":
-                        break;
-                    default:
-                        break;
+                if (boardArray[row][col].getColor() == 'W') {
+                    switch (boardArray[row][col].getClass().getName().substring(12)) {
+                        case "Pawn" -> field.setIcon(pawnWhite);
+                        case "Knight" -> {
+                            field.setIcon(knightWhite);
+                            field.addActionListener(e -> {
+                                int row2 = Integer.parseInt(field.getName().substring(0, 1));
+                                int col2 = Integer.parseInt(field.getName().substring(1, 2));
+                                ArrayList<Point> selectedMoveset = boardArray[row2][col2].move(field.getName());
+                                for (Point point : selectedMoveset) {
+                                    int rowNew = (int) point.getX();
+                                    int colNew = (int) point.getY();
+                                    refresh();
+                                    if (boardArray[rowNew][colNew].getColor() == 'N' || boardArray[rowNew][colNew].getColor() == 'B') {
+                                        boardArray[rowNew][colNew] = new Knight('W');
+                                    }
+
+                                }
+                            });
+                        }
+                        case "Bishop" -> field.setIcon(bishopWhite);
+                        case "Queen" -> field.setIcon(queenWhite);
+                        case "King" -> field.setIcon(kingWhite);
+                        case "Rook" -> field.setIcon(rookWhite);
+                        default -> {
+                        }
+                    }
+                } else if (boardArray[row][col].getColor() == 'B') {
+                    switch (boardArray[row][col].getClass().getName().substring(12)) {
+                        case "Pawn" -> field.setIcon(pawnBlack);
+                        case "Knight" -> {
+                            field.setIcon(knightBlack);
+                            field.addActionListener(e -> {
+                                int row2 = Integer.parseInt(field.getName().substring(0, 1));
+                                int col2 = Integer.parseInt(field.getName().substring(1, 2));
+                                ArrayList<Point> selectedMoveset = boardArray[row2][col2].move(field.getName());
+                                for (Point point : selectedMoveset) {
+                                    int rowNew = (int) point.getX();
+                                    int colNew = (int) point.getY();
+                                    refresh();
+                                    if (boardArray[rowNew][colNew].getColor() == 'N' || boardArray[rowNew][colNew].getColor() == 'W') {
+                                        boardArray[rowNew][colNew] = new Knight('B');
+                                    }
+
+                                }
+                            });
+                        }
+                        case "Bishop" -> field.setIcon(bishopBlack);
+                        case "Queen" -> field.setIcon(queenBlack);
+                        case "King" -> field.setIcon(kingBlack);
+                        case "Rook" -> field.setIcon(rookBlack);
+                        default -> {
+                        }
+                    }
                 }
+
+
                 field.setName(row + "" + col);
                 if (temp % 2 == 0) {
                     field.setBackground(brown);
@@ -172,7 +214,6 @@ public class Board {
                     field.setBackground(Color.WHITE);
                 }
 
-                field.add(label);
                 field.setPreferredSize(new Dimension(64,64));
                 boardPanel.add(field);
             }
