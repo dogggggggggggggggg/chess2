@@ -13,6 +13,7 @@ public class Board {
     Point selected = new Point();
     ArrayList<Point> moveset = new ArrayList<>();
     Color brown = new Color(193, 154, 107);
+    int turn;
     private int temp;
 
     ImageIcon rookBlack = new ImageIcon(ClassLoader.getSystemResource("Rook_B.png"));
@@ -67,17 +68,14 @@ public class Board {
                                    for (Point point : selectedMoveset) {
                                        int rowNew = (int) point.getX();
                                        int colNew = (int) point.getY();
-                                       refresh();
-                                       refresh();
                                        if (boardArray[rowNew][colNew].getColor() != 'W') {
                                            moveset.add(point);
-                                           System.out.println(moveset);
-
                                            current = new Knight('W');
                                        }
 
                                    }
-
+                                   turn++;
+                                   refresh();
                                });
                                field.setIcon(knightWhite);
                            }
@@ -107,34 +105,42 @@ public class Board {
                    case 6:
                        boardArray[row][col] = new Pawn('B');
                        field.setIcon(pawnBlack);
+                       field.setDisabledIcon(pawnBlack);
+                       field.setEnabled(false);
                        break;
                    //Schwarze Seite
                    case 7:
+                       field.setEnabled(false);
                        switch (row) {
                            //Türme
                            case 0, 7 -> {
                                boardArray[row][col] = new Rook('B');
                                field.setIcon(rookBlack);
+                               field.setDisabledIcon(rookBlack);
                            }
                            //Springer
                            case 1, 6 -> {
                                boardArray[row][col] = new Knight('B');
                                field.setIcon(knightBlack);
+                               field.setDisabledIcon(knightBlack);
                            }
                            //Läufer
                            case 2, 5 -> {
                                boardArray[row][col] = new Bishop('B');
                                field.setIcon(bishopBlack);
+                               field.setDisabledIcon(bishopBlack);
                            }
                            //Königin
                            case 3 -> {
                                boardArray[row][col] = new Queen('B');
                                field.setIcon(queenBlack);
+                               field.setDisabledIcon(queenBlack);
                            }
                            //König
                            case 4 -> {
                                boardArray[row][col] = new King('B');
                                field.setIcon(kingBlack);
+                               field.setDisabledIcon(kingBlack);
                            }
                        }
                        break;
@@ -144,7 +150,7 @@ public class Board {
                 }
             }
         }
-
+        turn = 0;
         windowFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         windowFrame.add(boardPanel);
         windowFrame.setSize(1024,1024);
@@ -167,10 +173,17 @@ public class Board {
                 switch (boardArray[row][col].getColor()) {
                     //Weisse Figuren
                     case 'W'-> {
+                        if (turn == 1 || turn == 2 || turn == 4 ){
+                            field.setEnabled(false);
+                        }
                         switch (boardArray[row][col].getClass().getName().substring(12)) {
-                        case "Pawn" -> field.setIcon(pawnWhite);
+                        case "Pawn" -> {
+                            field.setIcon(pawnWhite);
+                            field.setDisabledIcon(pawnWhite);}
                         case "Knight" -> {
                             field.setIcon(knightWhite);
+                            field.setDisabledIcon(knightWhite);
+                            if (turn != 3){
                             field.addActionListener(e -> {
                                 int row2 = Integer.parseInt(field.getName().substring(0, 1));
                                 int col2 = Integer.parseInt(field.getName().substring(1, 2));
@@ -183,19 +196,31 @@ public class Board {
                                     refresh();
                                     if (boardArray[rowNew][colNew].getColor() != 'W') {
                                         moveset.add(point);
-                                        System.out.println(moveset);
-
                                         current = new Knight('W');
                                     }
 
                                 }
+                                turn++;
                             refresh();
                             });
+                            }
                         }
-                        case "Bishop" -> field.setIcon(bishopWhite);
-                        case "Queen" -> field.setIcon(queenWhite);
-                        case "King" -> field.setIcon(kingWhite);
-                        case "Rook" -> field.setIcon(rookWhite);
+                        case "Bishop" -> {
+                            field.setIcon(bishopWhite);
+                            field.setDisabledIcon(bishopWhite);
+                        }
+                        case "Queen" -> {
+                            field.setIcon(queenWhite);
+                            field.setDisabledIcon(queenWhite);
+                        }
+                        case "King" -> {
+                            field.setIcon(kingWhite);
+                            field.setDisabledIcon(kingWhite);
+                        }
+                        case "Rook" -> {
+                            field.setIcon(rookWhite);
+                            field.setDisabledIcon(rookWhite);
+                        }
 
                         default -> {
 
@@ -204,10 +229,18 @@ public class Board {
                     }
                     //Schwarze Figuren
                     case 'B' -> {
+                        if (turn == 0  || turn == 3 || turn == 4){
+                            field.setEnabled(false);
+                        }
                         switch (boardArray[row][col].getClass().getName().substring(12)) {
-                            case "Pawn" -> field.setIcon(pawnBlack);
+                            case "Pawn" -> {
+                                field.setIcon(pawnBlack);
+                                field.setDisabledIcon(pawnBlack);
+                            }
                             case "Knight" -> {
                                 field.setIcon(knightBlack);
+                                field.setDisabledIcon(knightBlack);
+                                if(turn != 1){
                                 field.addActionListener(e -> {
                                     int row2 = Integer.parseInt(field.getName().substring(0, 1));
                                     int col2 = Integer.parseInt(field.getName().substring(1, 2));
@@ -220,19 +253,31 @@ public class Board {
 
                                         if (boardArray[rowNew][colNew].getColor() != 'B') {
                                             moveset.add(point);
-                                            System.out.println(moveset);
-
                                             current = new Knight('B');
                                         }
 
                                     }
+                                    turn++;
                                     refresh();
                                 });
+                                }
                             }
-                            case "Bishop" -> field.setIcon(bishopBlack);
-                            case "Queen" -> field.setIcon(queenBlack);
-                            case "King" -> field.setIcon(kingBlack);
-                            case "Rook" -> field.setIcon(rookBlack);
+                            case "Bishop" -> {
+                                field.setIcon(bishopBlack);
+                                field.setDisabledIcon(bishopBlack);
+                            }
+                            case "Queen" -> {
+                                field.setIcon(queenBlack);
+                                field.setDisabledIcon(queenBlack);
+                            }
+                            case "King" -> {
+                                field.setIcon(kingBlack);
+                                field.setDisabledIcon(kingBlack);
+                            }
+                            case "Rook" -> {
+                                field.setIcon(rookBlack);
+                                field.setDisabledIcon(rookBlack);
+                            }
                             default -> {
                             }
                         }
@@ -246,12 +291,15 @@ public class Board {
                 for (Point p : moveset){
                     if (row == p.getX() && col == p.getY()){
                         field.addActionListener(e -> {
-                            System.out.println("a");
                             boardArray[(int) p.getX()][(int) p.getY()] = current;
                             boardArray[(int) selected.getX()][(int) selected.getY()] = new None('N');
                             selected = new Point();
                             current = new None('N');
                             moveset.removeAll(moveset);
+                            turn++;
+                            if (turn == 4){
+                                turn = 0;
+                            }
                             refresh();
                         });
                     }
@@ -268,6 +316,7 @@ public class Board {
                 boardPanel.add(field);
             }
         }
+
         SwingUtilities.updateComponentTreeUI(boardPanel);
     }
 }
