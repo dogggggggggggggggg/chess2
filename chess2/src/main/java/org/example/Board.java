@@ -11,7 +11,7 @@ public class Board {
     Pieces[][] boardArray = new Pieces[8][8];
     Pieces current = new None('N');
     Point selected = new Point();
-    ArrayList<Point> moveset = new ArrayList<>();
+    ArrayList<Point> moveSet = new ArrayList<>();
     Color brown = new Color(193, 154, 107);
     int turn;
     private int temp;
@@ -31,7 +31,7 @@ public class Board {
     public Board() {
         boardPanel.setLayout(new GridLayout(8,8));
 
-        //Brett austellen orginal
+        //Brett aufstellen original
         for(int col = 0; col < 8; col++, temp++){
             for(int row = 0; row <8; row++, temp++) {
                 //Feld erstellen und bemalen
@@ -55,11 +55,11 @@ public class Board {
                            case 0, 7 -> {
                                boardArray[row][col] = new Rook('W');
                                field.addActionListener(e -> {
-                                   moveset.clear();
+                                   moveSet.clear();
                                    int row2 = Integer.parseInt(field.getName().substring(0, 1));
                                    int col2 = Integer.parseInt(field.getName().substring(1, 2));
                                    selected.setLocation(row2, col2);
-                                   moveset = boardArray[selected.x][selected.y].move(selected, boardArray);
+                                   moveSet = boardArray[selected.x][selected.y].move(selected, boardArray);
                                    current = new Rook('W');
                                    turn++;
                                    refresh();
@@ -70,11 +70,11 @@ public class Board {
                            case 1, 6 -> {
                                boardArray[row][col] = new Knight('W');
                                field.addActionListener(e -> {
-                                   moveset.clear();
+                                   moveSet.clear();
                                    int row2 = Integer.parseInt(field.getName().substring(0, 1));
                                    int col2 = Integer.parseInt(field.getName().substring(1, 2));
                                    selected.setLocation(row2,col2);
-                                   moveset = boardArray[row2][col2].move(selected, boardArray);
+                                   moveSet = boardArray[row2][col2].move(selected, boardArray);
 
                                    current = new Knight('W');
                                    turn++;
@@ -85,6 +85,16 @@ public class Board {
                            //Läufer
                            case 2, 5 -> {
                                boardArray[row][col] = new Bishop('W');
+                               field.addActionListener(e -> {
+                                   moveSet.clear();
+                                   int row2 = Integer.parseInt(field.getName().substring(0, 1));
+                                   int col2 = Integer.parseInt(field.getName().substring(1, 2));
+                                   selected.setLocation(row2, col2);
+                                   moveSet = boardArray[selected.x][selected.y].move(selected, boardArray);
+                                   current = new Bishop('W');
+                                   turn++;
+                                   refresh();
+                               });
                                field.setIcon(bishopWhite);
                            }
                            //Königin
@@ -191,11 +201,11 @@ public class Board {
                             field.setDisabledIcon(knightWhite);
                             if (turn != 3){
                             field.addActionListener(e -> {
-                                moveset.clear();
+                                moveSet.clear();
                                 int row2 = Integer.parseInt(field.getName().substring(0, 1));
                                 int col2 = Integer.parseInt(field.getName().substring(1, 2));
                                 selected.setLocation(row2,col2);
-                                moveset = boardArray[row2][col2].move(selected, boardArray);
+                                moveSet = boardArray[row2][col2].move(selected, boardArray);
 
                                 current = new Knight('W');
                                 turn++;
@@ -204,6 +214,18 @@ public class Board {
                             }
                         }
                         case "Bishop" -> {
+                            if (turn != 3) {
+                                field.addActionListener(e -> {
+                                    moveSet.clear();
+                                    int row2 = Integer.parseInt(field.getName().substring(0, 1));
+                                    int col2 = Integer.parseInt(field.getName().substring(1, 2));
+                                    selected.setLocation(row2, col2);
+                                    moveSet = boardArray[selected.x][selected.y].move(selected, boardArray);
+                                    current = new Bishop('W');
+                                    turn++;
+                                    refresh();
+                                });
+                            }
                             field.setIcon(bishopWhite);
                             field.setDisabledIcon(bishopWhite);
                         }
@@ -218,11 +240,11 @@ public class Board {
                         case "Rook" -> {
                            if (turn != 3) {
                                 field.addActionListener(e -> {
-                                    moveset.clear();
+                                    moveSet.clear();
                                     int row2 = Integer.parseInt(field.getName().substring(0, 1));
                                     int col2 = Integer.parseInt(field.getName().substring(1, 2));
                                     selected.setLocation(row2, col2);
-                                    moveset = boardArray[selected.x][selected.y].move(selected, boardArray);
+                                    moveSet = boardArray[selected.x][selected.y].move(selected, boardArray);
                                     current = new Rook('W');
                                     turn++;
                                     refresh();
@@ -252,11 +274,11 @@ public class Board {
                                 field.setDisabledIcon(knightBlack);
                                 if(turn != 1){
                                 field.addActionListener(e -> {
-                                    moveset.clear();
+                                    moveSet.clear();
                                     int row2 = Integer.parseInt(field.getName().substring(0, 1));
                                     int col2 = Integer.parseInt(field.getName().substring(1, 2));
                                     selected.setLocation(row2,col2);
-                                    moveset = boardArray[row2][col2].move(selected, boardArray);
+                                    moveSet = boardArray[row2][col2].move(selected, boardArray);
 
                                     current = new Knight('B');
                                     turn++;
@@ -265,6 +287,18 @@ public class Board {
                                 }
                             }
                             case "Bishop" -> {
+                                if(turn != 1) {
+                                    field.addActionListener(e -> {
+                                        moveSet.clear();
+                                        int row2 = Integer.parseInt(field.getName().substring(0, 1));
+                                        int col2 = Integer.parseInt(field.getName().substring(1, 2));
+                                        selected.setLocation(row2, col2);
+                                        moveSet = boardArray[selected.x][selected.y].move(selected, boardArray);
+                                        current = new Bishop('B');
+                                        turn++;
+                                        refresh();
+                                    });
+                                }
                                 field.setIcon(bishopBlack);
                                 field.setDisabledIcon(bishopBlack);
                             }
@@ -279,11 +313,11 @@ public class Board {
                             case "Rook" -> {
                                 if (turn != 1) {
                                     field.addActionListener(e -> {
-                                        moveset.clear();
+                                        moveSet.clear();
                                         int row2 = Integer.parseInt(field.getName().substring(0, 1));
                                         int col2 = Integer.parseInt(field.getName().substring(1, 2));
                                         selected.setLocation(row2, col2);
-                                        moveset = boardArray[selected.x][selected.y].move(selected, boardArray);
+                                        moveSet = boardArray[selected.x][selected.y].move(selected, boardArray);
                                         current = new Rook('B');
                                         turn++;
                                         refresh();
@@ -302,14 +336,14 @@ public class Board {
                 }
 
                 //Bewegung von figur
-                for (Point p : moveset){
+                for (Point p : moveSet){
                     if (row == p.getX() && col == p.getY()){
                         field.addActionListener(e -> {
                             boardArray[(int) p.getX()][(int) p.getY()] = current;
                             boardArray[(int) selected.getX()][(int) selected.getY()] = new None('N');
                             selected = new Point();
                             current = new None('N');
-                            moveset.clear();
+                            moveSet.clear();
                             turn++;
                             if (turn == 4){
                                 turn = 0;
@@ -338,8 +372,8 @@ public class Board {
 
 /*
 swing 8x8 feld
-jedes feld ein button
-button hat arrlist aus feld + figur
+jedes feld ein button.
+button hat array liste aus feld + figur
 feld hat ein array wert z.B int[x][y]
 array für jede figur  z.B String[farbe][figur]
 figuren bewegen sich indem man + oder - im array macht z.b Bauer + 2x

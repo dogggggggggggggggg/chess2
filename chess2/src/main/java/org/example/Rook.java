@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class Rook implements Pieces {
     private final char color;
-    ArrayList<Point> moveset = new ArrayList<>();
+    ArrayList<Point> moveSet = new ArrayList<>();
     Rook(char color) {
         this.color = color;
     }
@@ -16,7 +16,7 @@ public class Rook implements Pieces {
         moveCol(row,col +1,+1,board); // down
         moveRow(row +1 , col, +1, board); //right
         moveRow(row -1, col, -1,board); //left
-        return moveset;
+        return moveSet;
     }
     public char color() {
         return color;
@@ -29,12 +29,12 @@ public class Rook implements Pieces {
         for ( ;row <=7 && row >= 0; row += diff){
 
             if(board[row][col].color() == 'N'){
-                moveset.add(new Point(row,col));
+                moveSet.add(new Point(row,col));
 
             } else if (board[row][col].color() == pieceColor) {
                 break;
             } else if (board[row][col].color() != pieceColor) {
-                moveset.add(new Point(row,col));
+                moveSet.add(new Point(row,col));
                 break;
             }
         }
@@ -45,12 +45,12 @@ public class Rook implements Pieces {
         for (; col <=7 && col >= 0; col += diff){
 
             if(board[row][col].color() == 'N'){
-                moveset.add(new Point(row,col));
+                moveSet.add(new Point(row,col));
 
             } else if (board[row][col].color() == pieceColor) {
                 break;
             } else if (board[row][col].color() != pieceColor) {
-                moveset.add(new Point(row,col));
+                moveSet.add(new Point(row,col));
                 break;
             }
         }
