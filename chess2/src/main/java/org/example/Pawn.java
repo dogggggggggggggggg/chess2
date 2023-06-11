@@ -4,28 +4,18 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Pawn implements Pieces  {
-    private char color;
+    private final char color;
 
     Pawn(char color){
     this.color = color;
 
     }
-    public ArrayList<Point> move(String location){
-        int col = Integer.parseInt(location.substring(0,1));
-        int row = Integer.parseInt(location.substring(1,2));
-        if (color == 'W'){
-            col += 2;
+    public ArrayList<Point> move(Point location, Pieces[][] board){
 
-        } else {
-            col -= 2;
-        }
         return null;
     }
-    public char getColor() {
+    public char color() {
         return color;
     }
 
-    public void setColor(char color) {
-        this.color = color;
-    }
 }
