@@ -13,11 +13,11 @@ public class Bishop implements Pieces {
     public ArrayList<Point> move(Point location, Pieces[][] board){
         int row = (int) location.getX();
         int col = (int) location.getY();
-        moveField(row -1,col -1,-1,-1,board); // up/left
-        moveField(row -1,col +1,-1,+1,board); // down/left
-        moveField(row +1,col +1,+1,+1, board); //down/right
-        moveField(row +1,col -1,+1,-1,board); //up right
-        System.out.println(moveSet);
+        moveDiagonal(row -1,col -1,-1,-1,board); // up/left
+        moveDiagonal(row -1,col +1,-1,+1,board); // down/left
+        moveDiagonal(row +1,col +1,+1,+1, board); //down/right
+        moveDiagonal(row +1,col -1,+1,-1,board); //up right
+
         return moveSet;
     }
     public char color() {
@@ -25,7 +25,7 @@ public class Bishop implements Pieces {
     }
 
     
-    private void moveField(int row, int col, int diffRow,int diffCol, Pieces[][] board){
+    private void moveDiagonal(int row, int col, int diffRow,int diffCol, Pieces[][] board){
         if (row <= 7 && row >= 0 && col <= 7 && col >= 0){
             char pieceColor = board[row-diffRow][col-diffCol].color();
 

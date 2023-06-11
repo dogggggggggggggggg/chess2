@@ -16,6 +16,7 @@ public class Rook implements Pieces {
         moveCol(row,col +1,+1,board); // down
         moveRow(row +1 , col, +1, board); //right
         moveRow(row -1, col, -1,board); //left
+
         return moveSet;
     }
     public char color() {
