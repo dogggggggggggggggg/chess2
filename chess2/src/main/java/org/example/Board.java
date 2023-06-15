@@ -122,6 +122,16 @@ public class Board {
                    case 1:
                        boardArray[row][col] = new Pawn('W');
                        field.setIcon(pawnWhite);
+                       field.addActionListener(e -> {
+                           moveSet.clear();
+                           int row2 = Integer.parseInt(field.getName().substring(0, 1));
+                           int col2 = Integer.parseInt(field.getName().substring(1, 2));
+                           selected.setLocation(row2,col2);
+                           moveSet = boardArray[row2][col2].move(selected, boardArray);
+
+                           current = new Pawn('W');
+                           refresh();
+                       });
                        //boardArray[row][col] = new None('N');
                        break;
                    //Schwarze Bauern
@@ -201,7 +211,20 @@ public class Board {
                         switch (boardArray[row][col].getClass().getName().substring(12)) {
                         case "Pawn" -> {
                             field.setIcon(pawnWhite);
-                            field.setDisabledIcon(pawnWhite);}
+                            field.setDisabledIcon(pawnWhite);
+                            if (turn != 1){
+                                field.addActionListener(e -> {
+                                    moveSet.clear();
+                                    int row2 = Integer.parseInt(field.getName().substring(0, 1));
+                                    int col2 = Integer.parseInt(field.getName().substring(1, 2));
+                                    selected.setLocation(row2,col2);
+                                    moveSet = boardArray[row2][col2].move(selected, boardArray);
+
+                                    current = new Pawn('W');
+                                    refresh();
+                                });
+                            }
+                        }
                         case "Knight" -> {
                             field.setIcon(knightWhite);
                             field.setDisabledIcon(knightWhite);
@@ -260,7 +283,7 @@ public class Board {
                                     int row2 = Integer.parseInt(field.getName().substring(0, 1));
                                     int col2 = Integer.parseInt(field.getName().substring(1, 2));
                                     selected.setLocation(row2, col2);
-                                    moveSet = boardArray[selected.x][selected.y].move(selected, boardArray);
+                                    moveSet = boardArray[row2][col2].move(selected, boardArray);
                                     current = new Rook('W');
 
                                     refresh();
@@ -281,6 +304,18 @@ public class Board {
                             case "Pawn" -> {
                                 field.setIcon(pawnBlack);
                                 field.setDisabledIcon(pawnBlack);
+                                if(turn != 0){
+                                field.addActionListener(e -> {
+                                    moveSet.clear();
+                                    int row2 = Integer.parseInt(field.getName().substring(0, 1));
+                                    int col2 = Integer.parseInt(field.getName().substring(1, 2));
+                                    selected.setLocation(row2,col2);
+                                    moveSet = boardArray[row2][col2].move(selected, boardArray);
+
+                                    current = new Pawn('B');
+                                    refresh();
+                                });
+                                }
                             }
                             case "Knight" -> {
                                 field.setIcon(knightBlack);
@@ -305,7 +340,7 @@ public class Board {
                                         int row2 = Integer.parseInt(field.getName().substring(0, 1));
                                         int col2 = Integer.parseInt(field.getName().substring(1, 2));
                                         selected.setLocation(row2, col2);
-                                        moveSet = boardArray[selected.x][selected.y].move(selected, boardArray);
+                                        moveSet = boardArray[row2][col2].move(selected, boardArray);
                                         current = new Bishop('B');
                                         refresh();
                                     });

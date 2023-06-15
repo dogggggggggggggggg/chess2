@@ -13,27 +13,27 @@ public class Knight implements Pieces {
         int col = (int) location.getY();
         char pieceColor = board[row][col].color();
         
-        ArrayList<Point> moveset = new ArrayList<>();
-        if(((row + 1) <= 7) && ((col + 2) <= 7)){moveset.add( new Point(row+1,col+2));}
-        if(((row - 1) >= 0) && ((col + 2) <= 7)){moveset.add( new Point(row-1,col+2));}
-        if(((row + 1) <= 7) && ((col - 2) >= 0)){moveset.add( new Point(row+1,col-2));}
-        if(((row - 1) >= 0) && ((col - 2) >= 0)){moveset.add( new Point(row-1,col-2));}
-        if(((row + 2) <= 7) && ((col + 1) <= 7)){moveset.add( new Point(row+2,col+1));}
-        if(((row + 2) <= 7) && ((col - 1) >= 0)){moveset.add( new Point(row+2,col-1));}
-        if(((row - 2) >= 0) && ((col + 1) <= 7)){moveset.add( new Point(row-2,col+1));}
-        if(((row - 2) >= 0) && ((col - 1) >= 0)){moveset.add( new Point(row-2,col-1));}
+        ArrayList<Point> moveSet = new ArrayList<>();
+        if(Main.inBoard(row +1,col +2)){moveSet.add( new Point(row+1,col+2));}
+        if(Main.inBoard(row -1,col +2)){moveSet.add( new Point(row-1,col+2));}
+        if(Main.inBoard(row +1,col -2)){moveSet.add( new Point(row+1,col-2));}
+        if(Main.inBoard(row -1,col -2)){moveSet.add( new Point(row-1,col-2));}
+        if(Main.inBoard(row +2,col +1)){moveSet.add( new Point(row+2,col+1));}
+        if(Main.inBoard(row +2,col -1)){moveSet.add( new Point(row+2,col-1));}
+        if(Main.inBoard(row -2,col +1)){moveSet.add( new Point(row-2,col+1));}
+        if(Main.inBoard(row -2,col -1)){moveSet.add( new Point(row-2,col-1));}
 
 
-        return checkMoves(board,moveset,pieceColor);
+        return checkMoves(board,moveSet,pieceColor);
     }
     public char color() {
         return color;
     }
 
 
-    public ArrayList<Point> checkMoves(Pieces[][] board, ArrayList<Point> moveset, char pieceColor){
+    public ArrayList<Point> checkMoves(Pieces[][] board, ArrayList<Point> moveSet, char pieceColor){
         ArrayList<Point> legalMoves = new ArrayList<>();
-        for (Point point : moveset) {
+        for (Point point : moveSet) {
             int rowNew = (int) point.getX();
             int colNew = (int) point.getY();
 

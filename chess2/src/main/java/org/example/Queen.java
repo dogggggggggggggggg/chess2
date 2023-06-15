@@ -28,10 +28,10 @@ public class Queen implements Pieces {
     }
 
     private void moveDiagonal(int row, int col, int diffRow,int diffCol, Pieces[][] board){
-        if (row <= 7 && row >= 0 && col <= 7 && col >= 0){
+        if (Main.inBoard(row + diffRow, col + diffCol)){
             char pieceColor = board[row-diffRow][col-diffCol].color();
 
-            for ( ;row <= 7 && row >= 0 && col <= 7 && col >= 0; row += diffRow, col += diffCol){
+            for ( ;Main.inBoard(row,col); row += diffRow, col += diffCol){
                 if(board[row][col].color() == 'N'){
                     moveSet.add(new Point(row,col));
                 } else if (board[row][col].color() == pieceColor) {
