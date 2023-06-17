@@ -186,6 +186,7 @@ public class Board {
             }
         }
         turn = 0;
+        windowFrame.setTitle("White to move");
         windowFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         windowFrame.add(boardPanel);
         windowFrame.setSize(1024,1024);
@@ -214,12 +215,7 @@ public class Board {
                             field.setDisabledIcon(pawnWhite);
                             if (turn != 1){
                                 field.addActionListener(e -> {
-                                    moveSet.clear();
-                                    int row2 = Integer.parseInt(field.getName().substring(0, 1));
-                                    int col2 = Integer.parseInt(field.getName().substring(1, 2));
-                                    selected.setLocation(row2,col2);
-                                    moveSet = boardArray[row2][col2].move(selected, boardArray);
-
+                                    move(field);
                                     current = new Pawn('W');
                                     refresh();
                                 });
@@ -229,73 +225,54 @@ public class Board {
                             field.setIcon(knightWhite);
                             field.setDisabledIcon(knightWhite);
                             if (turn != 1){
-                            field.addActionListener(e -> {
-                                moveSet.clear();
-                                int row2 = Integer.parseInt(field.getName().substring(0, 1));
-                                int col2 = Integer.parseInt(field.getName().substring(1, 2));
-                                selected.setLocation(row2,col2);
-                                moveSet = boardArray[row2][col2].move(selected, boardArray);
-
-                                current = new Knight('W');
-                                refresh();
-                            });
+                                field.addActionListener(e -> {
+                                    move(field);
+                                    current = new Knight('W');
+                                    refresh();
+                                });
                             }
                         }
                         case "Bishop" -> {
+                            field.setIcon(bishopWhite);
+                            field.setDisabledIcon(bishopWhite);
                             if (turn != 1) {
                                 field.addActionListener(e -> {
-                                    moveSet.clear();
-                                    int row2 = Integer.parseInt(field.getName().substring(0, 1));
-                                    int col2 = Integer.parseInt(field.getName().substring(1, 2));
-                                    selected.setLocation(row2, col2);
-                                    moveSet = boardArray[selected.x][selected.y].move(selected, boardArray);
+                                    move(field);
                                     current = new Bishop('W');
                                     refresh();
                                 });
                             }
-                            field.setIcon(bishopWhite);
-                            field.setDisabledIcon(bishopWhite);
+
                         }
                         case "Queen" -> {
+                            field.setIcon(queenWhite);
+                            field.setDisabledIcon(queenWhite);
                             if (turn != 1){
                                 field.addActionListener(e -> {
-                                    moveSet.clear();
-                                    int row2 = Integer.parseInt(field.getName().substring(0, 1));
-                                    int col2 = Integer.parseInt(field.getName().substring(1, 2));
-                                    selected.setLocation(row2,col2);
-                                    moveSet = boardArray[row2][col2].move(selected, boardArray);
-
+                                    move(field);
                                     current = new Queen('W');
                                     refresh();
                                 });
                             }
-                            field.setIcon(queenWhite);
-                            field.setDisabledIcon(queenWhite);
+
                         }
                         case "King" -> {
                             field.setIcon(kingWhite);
                             field.setDisabledIcon(kingWhite);
                         }
                         case "Rook" -> {
-                           if (turn != 1) {
+                            field.setIcon(rookWhite);
+                            field.setDisabledIcon(rookWhite);
+                            if (turn != 1) {
                                 field.addActionListener(e -> {
-                                    moveSet.clear();
-                                    int row2 = Integer.parseInt(field.getName().substring(0, 1));
-                                    int col2 = Integer.parseInt(field.getName().substring(1, 2));
-                                    selected.setLocation(row2, col2);
-                                    moveSet = boardArray[row2][col2].move(selected, boardArray);
+                                    move(field);
                                     current = new Rook('W');
-
                                     refresh();
                                 });
                             }
-                            field.setIcon(rookWhite);
-                            field.setDisabledIcon(rookWhite);
-                        }
-
-                        default -> {
 
                         }
+                        default -> {}
                     }
                     }
                     //Schwarze Figuren
@@ -305,86 +282,62 @@ public class Board {
                                 field.setIcon(pawnBlack);
                                 field.setDisabledIcon(pawnBlack);
                                 if(turn != 0){
-                                field.addActionListener(e -> {
-                                    moveSet.clear();
-                                    int row2 = Integer.parseInt(field.getName().substring(0, 1));
-                                    int col2 = Integer.parseInt(field.getName().substring(1, 2));
-                                    selected.setLocation(row2,col2);
-                                    moveSet = boardArray[row2][col2].move(selected, boardArray);
-
-                                    current = new Pawn('B');
-                                    refresh();
-                                });
+                                    field.addActionListener(e -> {
+                                        move(field);
+                                        current = new Pawn('B');
+                                        refresh();
+                                    });
                                 }
                             }
                             case "Knight" -> {
                                 field.setIcon(knightBlack);
                                 field.setDisabledIcon(knightBlack);
                                 if(turn != 0){
-                                field.addActionListener(e -> {
-                                    moveSet.clear();
-                                    int row2 = Integer.parseInt(field.getName().substring(0, 1));
-                                    int col2 = Integer.parseInt(field.getName().substring(1, 2));
-                                    selected.setLocation(row2,col2);
-                                    moveSet = boardArray[row2][col2].move(selected, boardArray);
-
-                                    current = new Knight('B');
-                                    refresh();
-                                });
+                                    field.addActionListener(e -> {
+                                        move(field);
+                                        current = new Knight('B');
+                                        refresh();
+                                    });
                                 }
                             }
                             case "Bishop" -> {
+                                field.setIcon(bishopBlack);
+                                field.setDisabledIcon(bishopBlack);
                                 if(turn != 0) {
                                     field.addActionListener(e -> {
-                                        moveSet.clear();
-                                        int row2 = Integer.parseInt(field.getName().substring(0, 1));
-                                        int col2 = Integer.parseInt(field.getName().substring(1, 2));
-                                        selected.setLocation(row2, col2);
-                                        moveSet = boardArray[row2][col2].move(selected, boardArray);
+                                        move(field);
                                         current = new Bishop('B');
                                         refresh();
                                     });
                                 }
-                                field.setIcon(bishopBlack);
-                                field.setDisabledIcon(bishopBlack);
                             }
                             case "Queen" -> {
+                                field.setIcon(queenBlack);
+                                field.setDisabledIcon(queenBlack);
                                 if (turn != 0){
                                     field.addActionListener(e -> {
-                                        moveSet.clear();
-                                        int row2 = Integer.parseInt(field.getName().substring(0, 1));
-                                        int col2 = Integer.parseInt(field.getName().substring(1, 2));
-                                        selected.setLocation(row2,col2);
-                                        moveSet = boardArray[row2][col2].move(selected, boardArray);
-
+                                        move(field);
                                         current = new Queen('B');
                                         refresh();
                                     });
                                 }
-                                field.setIcon(queenBlack);
-                                field.setDisabledIcon(queenBlack);
                             }
                             case "King" -> {
                                 field.setIcon(kingBlack);
                                 field.setDisabledIcon(kingBlack);
                             }
                             case "Rook" -> {
+                                field.setIcon(rookBlack);
+                                field.setDisabledIcon(rookBlack);
                                 if (turn != 0) {
                                     field.addActionListener(e -> {
-                                        moveSet.clear();
-                                        int row2 = Integer.parseInt(field.getName().substring(0, 1));
-                                        int col2 = Integer.parseInt(field.getName().substring(1, 2));
-                                        selected.setLocation(row2, col2);
-                                        moveSet = boardArray[selected.x][selected.y].move(selected, boardArray);
+                                        move(field);
                                         current = new Rook('B');
                                         refresh();
                                     });
                                 }
-                                field.setIcon(rookBlack);
-                                field.setDisabledIcon(rookBlack);
                             }
-                            default -> {
-                            }
+                            default -> {}
                         }
                     }
                     //Nothing
@@ -403,7 +356,10 @@ public class Board {
                             moveSet.clear();
                             turn++;
                             if (turn == 2){
+                                windowFrame.setTitle("White to move");
                                 turn = 0;
+                            } else if (turn == 1) {
+                                windowFrame.setTitle("Black to move");
                             }
                             refresh();
                         });
@@ -425,17 +381,12 @@ public class Board {
 
         SwingUtilities.updateComponentTreeUI(boardPanel);
     }
+
+    private void move(JButton field){
+        moveSet.clear();
+        int row2 = Integer.parseInt(field.getName().substring(0, 1));
+        int col2 = Integer.parseInt(field.getName().substring(1, 2));
+        selected.setLocation(row2,col2);
+        moveSet = boardArray[row2][col2].move(selected, boardArray);
+    }
 }
-
-
-/*
-swing 8x8 feld
-jedes feld ein button.
-button hat array liste aus feld + figur
-feld hat ein array wert z.B int[x][y]
-array für jede figur  z.B String[farbe][figur]
-figuren bewegen sich indem man + oder - im array macht z.b Bauer + 2x
-
--------------------------------------------------------------------------
-
- */
