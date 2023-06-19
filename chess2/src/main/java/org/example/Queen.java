@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 public class Queen implements Pieces {
     private final char color;
+    char[] returnChar = new char[2];
     ArrayList<Point> moveSet = new ArrayList<>();
     Queen(char color){
         this.color = color;
@@ -12,14 +13,16 @@ public class Queen implements Pieces {
     public ArrayList<Point> move(Point location, Pieces[][] board){
         int row = (int) location.getX();
         int col = (int) location.getY();
-        moveDiagonal(row -1,col -1,-1,-1,board); // up/left
-        moveDiagonal(row -1,col +1,-1,+1,board); // down/left
-        moveDiagonal(row +1,col +1,+1,+1, board); //down/right
-        moveDiagonal(row +1,col -1,+1,-1,board); //up right
-        moveCol(row,col -1,-1 ,board); // up
-        moveCol(row,col +1,+1,board); // down
-        moveRow(row +1 , col, +1, board); //right
-        moveRow(row -1, col, -1,board); //left
+        moveSet.clear();
+
+        moves(row -1 ,col -1,-1,-1,board); // up/left
+        moves(row -1 ,col +1,-1,+1,board); // down/left
+        moves(row +1, col +1,+1,+1, board); //down/right
+        moves(row +1,col -1,+1,-1,board); //up right
+        moves(row,col -1,0,-1 ,board); // up
+        moves(row,col +1,0,+1,board); // down
+        moves(row +1, col,+1,0, board); //right
+        moves(row -1, col,-1,0,board); //left
 
         return moveSet;
     }
@@ -27,53 +30,70 @@ public class Queen implements Pieces {
         return color;
     }
 
-    private void moveDiagonal(int row, int col, int diffRow,int diffCol, Pieces[][] board){
-        if (Main.inBoard(row + diffRow, col + diffCol)){
-            char pieceColor = board[row-diffRow][col-diffCol].color();
+    public void moves(int row, int col, int diffRow,int diffCol, Pieces[][] board){
+        if (Main.inBoard(row,col)){
 
             for ( ;Main.inBoard(row,col); row += diffRow, col += diffCol){
                 if(board[row][col].color() == 'N'){
                     moveSet.add(new Point(row,col));
-                } else if (board[row][col].color() == pieceColor) {
+                } else if (board[row][col].color() == color) {
                     break;
-                } else if (board[row][col].color() != pieceColor) {
+                } else if (board[row][col].color() != color) {
                     moveSet.add(new Point(row,col));
                     break;
                 }
             }
         }
     }
-    private void moveRow(int row, int col, int diff, Pieces[][] board){
 
-        char pieceColor = board[row-diff][col].color();
-        for ( ;row <=7 && row >= 0; row += diff){
+    public void kingInCheck(int row, int col, int diffRow,int diffCol, Pieces[][] board){
+        if (Main.inBoard(row,col)){
 
-            if(board[row][col].color() == 'N'){
-                moveSet.add(new Point(row,col));
-
-            } else if (board[row][col].color() == pieceColor) {
-                break;
-            } else if (board[row][col].color() != pieceColor) {
-                moveSet.add(new Point(row,col));
-                break;
+            for ( ;Main.inBoard(row,col); row += diffRow, col += diffCol){
+                if(board[row][col].color() == 'N'){
+                    moveSet.add(new Point(row,col));
+                } else if (board[row][col].color() == color) {
+                    moveSet.add(new Point(row,col));
+                    break;
+                } else if (board[row][col].color() != color && board[row][col].getClass() == King.class ) {
+                    returnChar[0] = color;
+                    moveSet.add(new Point(row,col));
+                } else if (board[row][col].color() != color){
+                    moveSet.add(new Point(row,col));
+                    break;
+                }
             }
         }
     }
-    private void moveCol(int row, int col, int diff, Pieces[][] board){
-
-        char pieceColor = board[row][col-diff].color();
-        for (; col <=7 && col >= 0; col += diff){
-
-            if(board[row][col].color() == 'N'){
-                moveSet.add(new Point(row,col));
-
-            } else if (board[row][col].color() == pieceColor) {
-                break;
-            } else if (board[row][col].color() != pieceColor) {
-                moveSet.add(new Point(row,col));
-                break;
-            }
-        }
+    public ArrayList<Point> checkForKing(Point location, Pieces[][] board){
+        int row = (int) location.getX();
+        int col = (int) location.getY();
+        moveSet.clear();
+        kingInCheck(row -1 ,col -1,-1,-1,board); // up/left
+        kingInCheck(row -1 ,col +1,-1,+1,board); // down/left
+        kingInCheck(row +1, col +1,+1,+1, board); //down/right
+        kingInCheck(row +1,col -1,+1,-1,board); //up right
+        kingInCheck(row,col -1,0,-1 ,board); // up
+        kingInCheck(row,col +1,0,+1,board); // down
+        kingInCheck(row +1, col,+1,0, board); //right
+        kingInCheck(row -1, col,-1,0,board); //left
+        return moveSet;
     }
+    public char[] onMove(Point location, Pieces[][] board){
+        int row = location.x;
+        int col = location.y;
+        returnChar[0] = 'N';
+        moveSet.clear();
+        kingInCheck(row -1 ,col -1,-1,-1,board); // up/left
+        kingInCheck(row -1 ,col +1,-1,+1,board); // down/left
+        kingInCheck(row +1, col +1,+1,+1, board); //down/right
+        kingInCheck(row +1,col -1,+1,-1,board); //up right
+        kingInCheck(row,col -1,0,-1 ,board); // up
+        kingInCheck(row,col +1,0,+1,board); // down
+        kingInCheck(row +1, col,+1,0, board); //right
+        kingInCheck(row -1, col,-1,0,board); //left
+        returnChar[1] = 'N';
+        return returnChar;}
+
 
 }

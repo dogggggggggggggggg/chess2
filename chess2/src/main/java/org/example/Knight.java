@@ -5,13 +5,14 @@ import java.util.ArrayList;
 
 public class Knight implements Pieces {
     private final char color;
+    char[] returnChar = new char[2];
+    ArrayList<Point> moveSet = new ArrayList<>();
     Knight(char color){
         this.color = color;
     }
     public ArrayList<Point> move(Point location, Pieces[][] board){
         int row = (int) location.getX();
         int col = (int) location.getY();
-        char pieceColor = board[row][col].color();
         
         ArrayList<Point> moveSet = new ArrayList<>();
         if(Main.inBoard(row +1,col +2)){moveSet.add( new Point(row+1,col+2));}
@@ -24,23 +25,52 @@ public class Knight implements Pieces {
         if(Main.inBoard(row -2,col -1)){moveSet.add( new Point(row-2,col-1));}
 
 
-        return checkMoves(board,moveSet,pieceColor);
+        return checkMoves(board,moveSet);
     }
     public char color() {
         return color;
     }
-
-
-    public ArrayList<Point> checkMoves(Pieces[][] board, ArrayList<Point> moveSet, char pieceColor){
+    private ArrayList<Point> checkMoves(Pieces[][] board, ArrayList<Point> moveSet){
         ArrayList<Point> legalMoves = new ArrayList<>();
         for (Point point : moveSet) {
             int rowNew = (int) point.getX();
             int colNew = (int) point.getY();
 
-            if (board[rowNew][colNew].color() != pieceColor) {
+            if (board[rowNew][colNew].color() != color) {
                 legalMoves.add(point);
             }
         }
         return legalMoves;
+    }
+    public void kingInCheck(int row, int col, Pieces[][] board){
+        if(Main.inBoard(row,col) && board[row][col].color() != color && board[row][col].getClass() == King.class){
+            returnChar[0] = color;
+            System.out.println(color);
+            moveSet.add(new Point(row,col));
+        }
+    }
+    public ArrayList<Point> checkForKing(Point location, Pieces[][] board){
+        runKingInCheck(location, board);
+        return moveSet;
+    }
+    public char[] onMove(Point location, Pieces[][] board){
+        runKingInCheck(location, board);
+        return returnChar;
+    }
+    private void runKingInCheck(Point location, Pieces[][] board){
+        int row = (int) location.getX();
+        int col = (int) location.getY();
+        returnChar[0] = 'N';
+        returnChar[1] = 'N';
+        moveSet.clear();
+
+        kingInCheck(row +1,col +2, board);
+        kingInCheck(row -1,col +2, board);
+        kingInCheck(row +1,col -2, board);
+        kingInCheck(row -1,col -2, board);
+        kingInCheck(row +2,col +1, board);
+        kingInCheck(row +2,col -1, board);
+        kingInCheck(row -2,col +1, board);
+        kingInCheck(row -2,col -1, board);
     }
 }
