@@ -37,6 +37,8 @@ public class Rook implements Pieces {
 
                     } else if (board[row][col].color() == color) {
                         break;
+                    } else if (board[row][col].color() != color && board[row][col].getClass() == King.class ) {
+                    returnChar[0] = color;
                     } else if (board[row][col].color() != color) {
                         moveSet.add(new Point(row, col));
                         break;
@@ -63,15 +65,11 @@ public class Rook implements Pieces {
             case 1->{
                 for ( ;Main.inBoard(row,col); row += diffRow){
 
-                    if(board[row][col].color() == 'N'){
-                        moveSet.add(new Point(row,col));
-                    } else if (board[row][col].color() == color) {
+                    if (board[row][col].color() == color) {
                         break;
                     } else if (board[row][col].color() != color && board[row][col].getClass() == King.class ) {
                         returnChar[0] = color;
-                        moveSet.add(new Point(row,col));
-                    } else if (board[row][col].color() != color){
-                        moveSet.add(new Point(row,col));
+                    } else if (board[row][col].color() != color &&board[row][col].color() == 'N'){
                         break;
                     }
                 }
@@ -79,15 +77,12 @@ public class Rook implements Pieces {
             case 0->{
                 for (;Main.inBoard(row,col); col += diffCol){
 
-                    if(board[row][col].color() == 'N'){
-                        moveSet.add(new Point(row,col));
-                    } else if (board[row][col].color() == color) {
+                    if (board[row][col].color() == color) {
                         break;
                     } else if (board[row][col].color() != color && board[row][col].getClass() == King.class ) {
                         returnChar[0] = color;
-                        moveSet.add(new Point(row,col));
-                    } else if (board[row][col].color() != color){
-                        moveSet.add(new Point(row,col));
+                    } else if (board[row][col].color() != color && board[row][col].color() == 'N'){
+
                         break;
                     }
                 }
@@ -95,24 +90,15 @@ public class Rook implements Pieces {
         }
 
     }
-    public ArrayList<Point> checkForKing(Point location, Pieces[][] board){
-        runKingInCheck(location, board);
-        return moveSet;
-    }
     public char[] onMove(Point location, Pieces[][] board){
-        runKingInCheck(location, board);
-        return returnChar;
-    }
-    private void runKingInCheck(Point location, Pieces[][] board){
         int row = (int) location.getX();
         int col = (int) location.getY();
         returnChar[1] = 'N';
         returnChar[0] = 'N';
-        moveSet.clear();
         kingInCheck(row,col -1,0,-1,board,0); // up
         kingInCheck(row,col +1,0,+1,board,0); // down
         kingInCheck(row +1,col,+1,0,board,1); //right
         kingInCheck(row -1,col,-1,0,board,1); //left
-
+        return returnChar;
     }
 }

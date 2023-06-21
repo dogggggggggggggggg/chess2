@@ -17,10 +17,10 @@ public class Board {
     Color movementGreen = new Color(37, 191, 37);
     int turn;
     int tempInt;
+    int getOutOfCheck;
     char[] returnOnMove = new char[2];
-    char[] check = new char[2];
+    char check;
     boolean[] kingExist = new boolean[2];
-    boolean outOfCheck;
 
      ImageIcon rookBlack = new ImageIcon(ClassLoader.getSystemResource("Rook_B.png"));
      ImageIcon rookWhite = new ImageIcon(ClassLoader.getSystemResource("Rook_W.png"));
@@ -37,13 +37,14 @@ public class Board {
 
     public Board() {
         boardPanel.setLayout(new GridLayout(8,8));
+        check = 'N';
 
         //Brett aufstellen original
         for(int col = 0; col < 8; col++, tempInt++){
             for(int row = 0; row <8; row++, tempInt++) {
                 //Feld erstellen und bemalen
                 JButton field = new JButton();
-                field.setBorderPainted(false);
+                field.setBorder(BorderFactory.createLineBorder(Color.black,1));
                 field.setName(row + "" + col);
                 if (tempInt % 2 == 0){
                     field.setBackground(brown);
@@ -181,14 +182,13 @@ public class Board {
             boardPanel.remove(current);
         }
 
-
         //Panel mit veränderungen erstellen
         for(int col = 0; col < 8; col++, tempInt++) {
             for (int row = 0; row < 8; row++, tempInt++) {
                 JButton field = new JButton();
-                field.setBorderPainted(false);
                 field.setBackground(Color.blue);
                 field.setName(row + "" + col);
+                field.setBorder(BorderFactory.createLineBorder(Color.black,1));
 
                 switch (boardArray[row][col].color()) {
                     //Weisse Figuren
@@ -201,7 +201,7 @@ public class Board {
                                     field.addActionListener(e -> {
                                         current = new Pawn('W');
                                         move(field);
-                                        refresh();
+
                                     });
                                 }
                             }
@@ -213,7 +213,6 @@ public class Board {
                                         current = new Knight('W');
                                         move(field);
 
-                                        refresh();
                                     });
                                 }
                             }
@@ -224,7 +223,7 @@ public class Board {
                                     field.addActionListener(e -> {
                                         current = new Bishop('W');
                                         move(field);
-                                        refresh();
+
                                     });
                                 }
 
@@ -236,13 +235,13 @@ public class Board {
                                     field.addActionListener(e -> {
                                         current = new Queen('W');
                                         move(field);
-                                        refresh();
+
                                     });
                                 }
 
                             }
                             case "King" -> {
-                                if (check[1] == 'W'){field.setBackground(checkRed);}
+                                if (check == 'W'){field.setBackground(checkRed);}
                                 field.setIcon(kingWhite);
                                 field.setDisabledIcon(kingWhite);
                                 kingExist[1] = true;
@@ -250,7 +249,7 @@ public class Board {
                                     field.addActionListener(e -> {
                                         current = new King('W');
                                         move(field);
-                                        refresh();
+
                                     });
                                 }
 
@@ -262,7 +261,7 @@ public class Board {
                                     field.addActionListener(e -> {
                                         current = new Rook('W');
                                         move(field);
-                                        refresh();
+
                                     });
                                 }
                             }
@@ -279,7 +278,7 @@ public class Board {
                                     field.addActionListener(e -> {
                                         current = new Pawn('B');
                                         move(field);
-                                        refresh();
+
                                     });
                                 }
                             }
@@ -290,7 +289,7 @@ public class Board {
                                     field.addActionListener(e -> {
                                         current = new Knight('B');
                                         move(field);
-                                        refresh();
+
                                     });
                                 }
                             }
@@ -301,7 +300,7 @@ public class Board {
                                     field.addActionListener(e -> {
                                         current = new Bishop('B');
                                         move(field);
-                                        refresh();
+
                                     });
                                 }
                             }
@@ -312,12 +311,12 @@ public class Board {
                                     field.addActionListener(e -> {
                                         current = new Queen('B');
                                         move(field);
-                                        refresh();
+
                                     });
                                 }
                             }
                             case "King" -> {
-                                if (check[0] == 'B'){field.setBackground(checkRed);}
+                                if (check == 'B'){field.setBackground(checkRed);}
                                 field.setIcon(kingBlack);
                                 field.setDisabledIcon(kingBlack);
                                 kingExist[0] = true;
@@ -325,7 +324,7 @@ public class Board {
                                     field.addActionListener(e -> {
                                         current = new King('B');
                                         move(field);
-                                        refresh();
+
                                     });
                                 }
                             }
@@ -336,7 +335,7 @@ public class Board {
                                     field.addActionListener(e -> {
                                         current = new Rook('B');
                                         move(field);
-                                        refresh();
+
                                     });
                                 }
                             }
@@ -368,6 +367,10 @@ public class Board {
                 boardPanel.add(field);
             }
         }
+        if (check != 'N' && leftOverMoves(check) == 0){
+            winScreen(String.valueOf(check));
+        }
+
         if (!kingExist[1]){
             winScreen("Black");
             try {
@@ -375,7 +378,6 @@ public class Board {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-
         }
         if (!kingExist[0]){
             winScreen("White");
@@ -390,14 +392,13 @@ public class Board {
         SwingUtilities.updateComponentTreeUI(boardPanel);
     }
     private void move(JButton field){
-        moveSet.clear();
+        if (moveSet != null){moveSet.clear();}
         int row2 = Integer.parseInt(field.getName().substring(0, 1));
         int col2 = Integer.parseInt(field.getName().substring(1, 2));
         selected.setLocation(row2,col2);
         moveSet = boardArray[row2][col2].move(selected, boardArray);
-        if (check[0] == 'B' || check[1] == 'W') {
-                getsOutOfCheck(selected,current);
-        }
+        getsOutOfCheck(selected,current);
+        refresh();
     }
     private void promotion(Point p, char color){
         JFrame promotionFrame = new JFrame("Select Promotion");
@@ -422,7 +423,13 @@ public class Board {
             option.addActionListener(e ->  {
                 promotionFrame.dispose();
                 boardArray[p.x][p.y] = piece;
-
+                returnOnMove = boardArray[p.x][p.y].onMove(p,boardArray);
+                if (returnOnMove[0] == 'W' || returnOnMove[0] ==  'B'){
+                    switch (returnOnMove[0]){
+                        case 'W' -> check = 'B';
+                        case 'B' -> check = 'W';
+                    }
+                }
                 refresh();
             });
         }
@@ -433,37 +440,28 @@ public class Board {
             if (row == p.getX() && col == p.getY()){
                 field.setBackground(movementGreen);
                 field.addActionListener(e -> {
-                    check = new char[2];
                     boardArray[p.x][p.y] = current;
                     boardArray[selected.x][selected.y] = new None('N');
                     selected = new Point();
                     current = new None('N');
                     moveSet.clear();
                     turn++;
-
+                    check = 'N';
                     returnOnMove = boardArray[p.x][p.y].onMove(p,boardArray);
                     if (returnOnMove == null) {
                         returnOnMove = new char[2];
                     }
                     if (returnOnMove[0] == 'W' || returnOnMove[0] ==  'B'){
                         switch (returnOnMove[0]){
-                            case 'W' -> check[0] = 'B';
-                            case 'B' -> check[1] = 'W';
+                            case 'W' -> check = 'B';
+                            case 'B' -> check = 'W';
                         }
                     }
 
-                    if (boardArray[location.x][location.y].getClass() == Pawn.class) {
-                        if (returnOnMove[1] == 'W' || returnOnMove[1] == 'B') {
-                            promotion(location, returnOnMove[1]);
-                            boardArray[location.x][location.y].onMove(location,boardArray);
-                            returnOnMove[1] = 'N';
-                        }
-                    } else if (boardArray[location.x][location.y].getClass() == King.class) {
-                        switch (boardArray[location.x][location.y].color()){
-                            case 'W'-> check[1] = 'N';
-                            case 'B'-> check[0] = 'N';
-                        }
-                        refresh();
+                    if (boardArray[location.x][location.y].getClass() == Pawn.class && returnOnMove[1] == 'W' || returnOnMove[1] == 'B') {
+                        promotion(location, returnOnMove[1]);
+                        boardArray[location.x][location.y].onMove(location,boardArray);
+                        returnOnMove[1] = 'N';
                     }
                     if (turn == 2){
                         windowFrame.setTitle("White to move");
@@ -471,14 +469,51 @@ public class Board {
                     } else if (turn == 1) {
                         windowFrame.setTitle("Black to move");
                     }
+                    checkCheck();
                     refresh();
-
                 });
             }
     }
+    private  void winScreen(String winner){
+        switch (winner){
+            case "W" -> winner = "White won the game!";
+            case "B" -> winner = "Black won the game!";
+            case "P" -> winner = "Draw";
+        }
+        JFrame winFrame = new JFrame("Game over");
+        JPanel winPanel = new JPanel();
+        JLabel winLabel = new JLabel(winner);
+        JButton restart = new JButton("Play again");
+        restart.addActionListener(e -> {
+            windowFrame.dispose();
+            winFrame.dispose();
+            new Board();
+        });
+
+        winPanel.add(winLabel);
+        winPanel.add(restart);
+        winFrame.add(winPanel);
+        winFrame.setLocation(windowFrame.getX() + 387,windowFrame.getY() + 472);
+        winFrame.setSize(250,80);
+        winFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        winFrame.setVisible(true);
+    }
+    private void checkCheck(){
+        for(int col = 0; col < 8; col++) {
+            for (int row = 0; row < 8; row++) {
+                returnOnMove = boardArray[row][col].onMove(new Point(row,col), boardArray);
+                if (returnOnMove[0] == 'W' || returnOnMove[0] == 'B') {
+                    switch (returnOnMove[0]) {
+                        case 'W' -> check = 'B';
+                        case 'B' -> check = 'W';
+                    }
+                }
+
+            }
+        }
+    }
     private void getsOutOfCheck(Point oldLocation, Pieces piece){
         int checkOptions = 0;
-        outOfCheck = false;
         Pieces[][] tempCopy = new Pieces[8][8];
         char[] tempChar;
 
@@ -512,15 +547,10 @@ public class Board {
             for(int col = 0; col < 8; col++) {
                 for (int row = 0; row < 8; row++) {
                     tempChar = tempCopy[row][col].onMove(new Point(row, col), tempCopy);
-
-                    if (tempChar[0] != 'N') {
-                        System.out.println("b");
+                    if (tempChar[0] != 'N' ) {
                         if (tempChar[0] != piece.color()) {
-                            System.out.println("a      ");
-                            outOfCheck = true;
                             checkOptions++;
                             toRemove.add(newLocation);
-
                         }
                     }
 
@@ -530,10 +560,8 @@ public class Board {
             tempCopy[oldLocation.x][oldLocation.y] = piece;
 
         }
-        System.out.println(checkOptions + "----" + moveSet.size());
-        System.out.println(toRemove);
+        getOutOfCheck = moveSet.size() - checkOptions;
         if (checkOptions < moveSet.size()){
-            outOfCheck = true;
             for (Point a : toRemove){
                 moveSet.remove(a);
             }
@@ -541,39 +569,21 @@ public class Board {
             moveSet.clear();
         }
     }
-    private  void winScreen(String winner){
-        JFrame winFrame = new JFrame("Game over");
-        JPanel winPanel = new JPanel();
-        JLabel winLabel = new JLabel(winner + " won the game!");
-        JButton restart = new JButton("Play again");
-        restart.addActionListener(e -> {
-            windowFrame.dispose();
-            winFrame.dispose();
-            new Board();
-        });
-
-        winPanel.add(winLabel);
-        winPanel.add(restart);
-        winFrame.add(winPanel);
-        winFrame.setLocation(windowFrame.getX() + 387,windowFrame.getY() + 472);
-        winFrame.setSize(250,80);
-        winFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        winFrame.setVisible(true);
-    }
-    private void checkmate(char color,JButton field){
-        String text = "";
-        switch (color){
-            case 'W'-> text = "White";
-            case 'B'-> text = "Black";
+    private int leftOverMoves(char color){
+        int temp = 0;
+        getOutOfCheck = 0;
+        for(int col = 0; col < 8; col++) {
+            for (int row = 0; row < 8; row++) {
+                if (boardArray[row][col].getClass() != None.class){
+                    if (boardArray[row][col].color() == color) {
+                        moveSet = boardArray[row][col].move(new Point(row,col), boardArray);
+                        getsOutOfCheck(new Point(row,col),boardArray[row][col]);
+                        temp += getOutOfCheck;
+                    }
+                }
+            }
         }
-
-                    move(field);
-                    System.out.println(outOfCheck);
-
-        if (!outOfCheck){
-            winScreen(text);
-        }
-
-
+        System.out.println(temp + "temp");
+        return temp;
     }
 }

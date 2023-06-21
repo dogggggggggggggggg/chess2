@@ -12,8 +12,6 @@ public class King implements Pieces {
     King(char color){
         this.color = color;
     }
-
-
     public ArrayList<Point> move(Point location, Pieces[][] board){
         int row = (int) location.getX();
         int col = (int) location.getY();
@@ -39,28 +37,22 @@ public class King implements Pieces {
             moveSet.add(new Point(row,col));
         }
     }
-    public ArrayList<Point> checkForKing(Point p, Pieces[][] board){
-        moveSet.clear();
-        return moveSet;
-    }
-   private ArrayList<Point>  checkMoves(Pieces[][] board){
+    private ArrayList<Point>  checkMoves(Pieces[][] board){
 
         for(int col = 0; col < 8; col++, tempInt++) {
             for (int row = 0; row < 8; row++, tempInt++) {
-                if (board[row][col].color() != color){
-                    Point point = new Point(row,col);
-                    if (board[row][col].getClass() != King.class && board[row][col].move(point,board) != null){
-                        if (board[row][col].getClass() == Knight.class){
-                            moveSet2.addAll(moveSet2.size(), board[row][col].move(point,board));
-                        } else {
-
-                            moveSet2.addAll( board[row][col].checkForKing(point, board));
-                        }
-
+                Point point = new Point(row,col);
+                if (board[row][col].color() != color && board[row][col].getClass() != King.class && board[row][col].getClass() != Pawn.class && board[row][col].move(point,board) != null){
+                        moveSet2.addAll(moveSet2.size(), board[row][col].move(point,board));
+                } else if (board[row][col].color() != color && board[row][col].getClass() == Pawn.class && board[row][col].move(point,board) != null) {
+                    int tempCol = col;
+                    switch (board[row][col].color()){
+                        case 'W'-> tempCol +=1;
+                        case 'B'-> tempCol -=1;
                     }
-
+                    moveSet2.add(new Point(row+1,tempCol));
+                    moveSet2.add(new Point(row-1,tempCol));
                 }
-
             }
         }
 
@@ -75,5 +67,6 @@ public class King implements Pieces {
     public char[] onMove(Point location, Pieces[][] board){
         returnChar[1] = 'N';
         returnChar[0] = 'N';
-        return returnChar;}
+        return returnChar;
+    }
 }

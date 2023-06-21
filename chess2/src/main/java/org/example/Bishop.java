@@ -43,39 +43,26 @@ public class Bishop implements Pieces {
     }
     public void kingInCheck(int row, int col, int diffRow,int diffCol, Pieces[][] board){
         if (Main.inBoard(row,col)){
-
             for ( ;Main.inBoard(row,col); row += diffRow, col += diffCol){
-                if(board[row][col].color() == 'N'){
-                    moveSet.add(new Point(row,col));
-                } else if (board[row][col].color() == color) {
+                if (board[row][col].color() == color) {
                     break;
                 } else if (board[row][col].color() != color && board[row][col].getClass() == King.class ) {
                     returnChar[0] = color;
-                    moveSet.add(new Point(row,col));
-                } else if (board[row][col].color() != color){
-                    moveSet.add(new Point(row,col));
+                } else if (board[row][col].color() == 'N' && board[row][col].color() != color){
                     break;
                 }
             }
         }
     }
-    public ArrayList<Point> checkForKing(Point location, Pieces[][] board){
-        runKingInCheck(location, board);
-        return moveSet;
-    }
     public char[] onMove(Point location, Pieces[][] board){
-        runKingInCheck(location, board);
-        return returnChar;
-    }
-    private void runKingInCheck(Point location, Pieces[][] board){
         int row = (int) location.getX();
         int col = (int) location.getY();
         returnChar[0] = 'N';
         returnChar[1] = 'N';
-        moveSet.clear();
         kingInCheck(row -1,col -1,-1,-1,board); // up/left
         kingInCheck(row -1,col +1,-1,+1,board); // down/left
         kingInCheck(row +1,col +1,+1,+1, board); //down/right
         kingInCheck(row +1,col -1,+1,-1,board); //up right
+        return returnChar;
     }
 }

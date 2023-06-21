@@ -50,40 +50,21 @@ public class Queen implements Pieces {
         if (Main.inBoard(row,col)){
 
             for ( ;Main.inBoard(row,col); row += diffRow, col += diffCol){
-                if(board[row][col].color() == 'N'){
-                    moveSet.add(new Point(row,col));
-                } else if (board[row][col].color() == color) {
-                    moveSet.add(new Point(row,col));
+                if (board[row][col].color() == color) {
                     break;
                 } else if (board[row][col].color() != color && board[row][col].getClass() == King.class ) {
                     returnChar[0] = color;
-                    moveSet.add(new Point(row,col));
-                } else if (board[row][col].color() != color){
-                    moveSet.add(new Point(row,col));
+                } else if (board[row][col].color() != color && board[row][col].color() == 'N'){
                     break;
                 }
             }
         }
     }
-    public ArrayList<Point> checkForKing(Point location, Pieces[][] board){
-        int row = (int) location.getX();
-        int col = (int) location.getY();
-        moveSet.clear();
-        kingInCheck(row -1 ,col -1,-1,-1,board); // up/left
-        kingInCheck(row -1 ,col +1,-1,+1,board); // down/left
-        kingInCheck(row +1, col +1,+1,+1, board); //down/right
-        kingInCheck(row +1,col -1,+1,-1,board); //up right
-        kingInCheck(row,col -1,0,-1 ,board); // up
-        kingInCheck(row,col +1,0,+1,board); // down
-        kingInCheck(row +1, col,+1,0, board); //right
-        kingInCheck(row -1, col,-1,0,board); //left
-        return moveSet;
-    }
     public char[] onMove(Point location, Pieces[][] board){
         int row = location.x;
         int col = location.y;
         returnChar[0] = 'N';
-        moveSet.clear();
+        returnChar[1] = 'N';
         kingInCheck(row -1 ,col -1,-1,-1,board); // up/left
         kingInCheck(row -1 ,col +1,-1,+1,board); // down/left
         kingInCheck(row +1, col +1,+1,+1, board); //down/right
@@ -92,7 +73,7 @@ public class Queen implements Pieces {
         kingInCheck(row,col +1,0,+1,board); // down
         kingInCheck(row +1, col,+1,0, board); //right
         kingInCheck(row -1, col,-1,0,board); //left
-        returnChar[1] = 'N';
+
         return returnChar;}
 
 

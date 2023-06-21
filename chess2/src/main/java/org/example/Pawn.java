@@ -53,24 +53,15 @@ public class Pawn implements Pieces  {
     }
     public void kingInCheck(int row, int col, int diffRow,int diffCol, Pieces[][] board){
         if (Main.inBoard(row + diffRow, col + diffCol)){
-            if (board[row + diffRow][col + diffCol].getClass() == King.class){
+            if (board[row + diffRow][col + diffCol].getClass() == King.class && board[row + diffRow][col + diffCol].color() != color ){
                 switch (color){
-                    case 'W' ->  returnChar[0] = 'W';
-                    case 'B' ->  returnChar[0] = 'B';
+                    case 'B' ->  returnChar[0] = 'W';
+                    case 'W' ->  returnChar[0] = 'B';
                 }
             }
-            moveSet.add(new Point(row +diffRow,col + diffCol));
         }
     }
-    public ArrayList<Point> checkForKing(Point location, Pieces[][] board){
-        runKingInCheck(location, board);
-        return moveSet;
-    }
     public char[] onMove(Point location, Pieces[][] board){
-        runKingInCheck(location, board);
-        return returnChar;
-    }
-    private void runKingInCheck(Point location, Pieces[][] board){
         int row = (int) location.getX();
         int col = (int) location.getY();
         returnChar[0] = 'N';
@@ -91,5 +82,7 @@ public class Pawn implements Pieces  {
         } else if (col == 0) {
             returnChar[1] = 'B';
         }
+        return returnChar;
     }
+
 }

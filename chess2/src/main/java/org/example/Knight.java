@@ -45,19 +45,9 @@ public class Knight implements Pieces {
     public void kingInCheck(int row, int col, Pieces[][] board){
         if(Main.inBoard(row,col) && board[row][col].color() != color && board[row][col].getClass() == King.class){
             returnChar[0] = color;
-            System.out.println(color);
-            moveSet.add(new Point(row,col));
         }
     }
-    public ArrayList<Point> checkForKing(Point location, Pieces[][] board){
-        runKingInCheck(location, board);
-        return moveSet;
-    }
     public char[] onMove(Point location, Pieces[][] board){
-        runKingInCheck(location, board);
-        return returnChar;
-    }
-    private void runKingInCheck(Point location, Pieces[][] board){
         int row = (int) location.getX();
         int col = (int) location.getY();
         returnChar[0] = 'N';
@@ -72,5 +62,6 @@ public class Knight implements Pieces {
         kingInCheck(row +2,col -1, board);
         kingInCheck(row -2,col +1, board);
         kingInCheck(row -2,col -1, board);
+        return returnChar;
     }
 }
