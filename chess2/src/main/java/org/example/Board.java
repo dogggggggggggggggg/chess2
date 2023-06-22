@@ -367,12 +367,12 @@ public class Board {
                 boardPanel.add(field);
             }
         }
+        //Schachmatt überprüfen
         if (check != 'N' && leftOverMoves(check) == 0){
             winScreen(String.valueOf(check));
         }
-
         if (!kingExist[1]){
-            winScreen("Black");
+            winScreen("B");
             try {
                 wait();
             } catch (InterruptedException e) {
@@ -380,13 +380,12 @@ public class Board {
             }
         }
         if (!kingExist[0]){
-            winScreen("White");
+            winScreen("W");
             try {
                 wait();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-
         }
         kingExist = new boolean[2];
         SwingUtilities.updateComponentTreeUI(boardPanel);
@@ -412,6 +411,7 @@ public class Board {
         promotionFrame.setSize(512,128);
         promotionFrame.setVisible(true);
 
+        //für jede figur ein button machen
         for (Pieces piece : pieces) {
             JButton option = new JButton();
             option.setName(piece.toString());
@@ -448,21 +448,15 @@ public class Board {
                     turn++;
                     check = 'N';
                     returnOnMove = boardArray[p.x][p.y].onMove(p,boardArray);
-                    if (returnOnMove == null) {
-                        returnOnMove = new char[2];
-                    }
-                    if (returnOnMove[0] == 'W' || returnOnMove[0] ==  'B'){
-                        switch (returnOnMove[0]){
-                            case 'W' -> check = 'B';
-                            case 'B' -> check = 'W';
-                        }
-                    }
 
+                    //Testen ob bauer promotion machen kann
                     if (boardArray[location.x][location.y].getClass() == Pawn.class && returnOnMove[1] == 'W' || returnOnMove[1] == 'B') {
                         promotion(location, returnOnMove[1]);
                         boardArray[location.x][location.y].onMove(location,boardArray);
                         returnOnMove[1] = 'N';
                     }
+
+                    //Wer am zug dran ist
                     if (turn == 2){
                         windowFrame.setTitle("White to move");
                         turn = 0;
@@ -476,9 +470,8 @@ public class Board {
     }
     private  void winScreen(String winner){
         switch (winner){
-            case "W" -> winner = "White won the game!";
-            case "B" -> winner = "Black won the game!";
-            case "P" -> winner = "Draw";
+            case "W" -> winner = "Black won the game!";
+            case "B" -> winner = "White won the game!";
         }
         JFrame winFrame = new JFrame("Game over");
         JPanel winPanel = new JPanel();
@@ -517,6 +510,7 @@ public class Board {
         Pieces[][] tempCopy = new Pieces[8][8];
         char[] tempChar;
 
+        //BoardArray kopieren
         for(int col = 0; col < 8; col++) {
             for (int row = 0; row < 8; row++) {
                 switch (boardArray[row][col].getClass().getName().substring(12)){
@@ -544,30 +538,25 @@ public class Board {
                 case "Rook" -> tempCopy[newLocation.x][newLocation.y] = new Rook(piece.color());
             }
 
+            //schauen ob der nach dem zug immer noch schach wäre
             for(int col = 0; col < 8; col++) {
                 for (int row = 0; row < 8; row++) {
                     tempChar = tempCopy[row][col].onMove(new Point(row, col), tempCopy);
-                    if (tempChar[0] != 'N' ) {
-                        if (tempChar[0] != piece.color()) {
-                            checkOptions++;
-                            toRemove.add(newLocation);
-                        }
+                    if (tempChar[0] != 'N' && tempChar[0] != piece.color()) {
+                        checkOptions++;
+                        toRemove.add(newLocation);
                     }
-
                 }
             }
             tempCopy[newLocation.x][newLocation.y] = new None('N');
             tempCopy[oldLocation.x][oldLocation.y] = piece;
-
         }
         getOutOfCheck = moveSet.size() - checkOptions;
-        if (checkOptions < moveSet.size()){
+
+        //unmögliche züge entfernen
             for (Point a : toRemove){
                 moveSet.remove(a);
             }
-        } else {
-            moveSet.clear();
-        }
     }
     private int leftOverMoves(char color){
         int temp = 0;
@@ -583,7 +572,6 @@ public class Board {
                 }
             }
         }
-        System.out.println(temp + "temp");
         return temp;
     }
 }

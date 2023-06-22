@@ -69,7 +69,7 @@ public class Rook implements Pieces {
                         break;
                     } else if (board[row][col].color() != color && board[row][col].getClass() == King.class ) {
                         returnChar[0] = color;
-                    } else if (board[row][col].color() != color &&board[row][col].color() == 'N'){
+                    } else if (board[row][col].color() != color &&board[row][col].color() != 'N'){
                         break;
                     }
                 }
@@ -81,7 +81,7 @@ public class Rook implements Pieces {
                         break;
                     } else if (board[row][col].color() != color && board[row][col].getClass() == King.class ) {
                         returnChar[0] = color;
-                    } else if (board[row][col].color() != color && board[row][col].color() == 'N'){
+                    } else if (board[row][col].color() != color && board[row][col].color() != 'N'){
 
                         break;
                     }

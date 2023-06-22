@@ -48,7 +48,7 @@ public class Bishop implements Pieces {
                     break;
                 } else if (board[row][col].color() != color && board[row][col].getClass() == King.class ) {
                     returnChar[0] = color;
-                } else if (board[row][col].color() == 'N' && board[row][col].color() != color){
+                } else if (board[row][col].color() != color && board[row][col].color() != 'N'){
                     break;
                 }
             }
