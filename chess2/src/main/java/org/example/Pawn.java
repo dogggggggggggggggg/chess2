@@ -84,5 +84,8 @@ public class Pawn implements Pieces  {
         }
         return returnChar;
     }
+    public Pieces copy(){
+        return new Pawn(color);
+    }
 
 }

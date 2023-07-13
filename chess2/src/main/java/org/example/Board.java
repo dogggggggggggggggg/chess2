@@ -501,42 +501,26 @@ public class Board {
                         case 'B' -> check = 'W';
                     }
                 }
-
             }
         }
     }
-    private void getsOutOfCheck(Point oldLocation, Pieces piece){
+    private void getsOutOfCheck(Point oldLocation, Pieces piece) {
         int checkOptions = 0;
         Pieces[][] tempCopy = new Pieces[8][8];
         char[] tempChar;
+        Pieces tempPiece;
 
         //BoardArray kopieren
-        for(int col = 0; col < 8; col++) {
+        for (int col = 0; col < 8; col++) {
             for (int row = 0; row < 8; row++) {
-                switch (boardArray[row][col].getClass().getName().substring(12)){
-                    case "Knight" -> tempCopy[row][col] = new Knight(boardArray[row][col].color());
-                    case "Bishop" -> tempCopy[row][col] = new Bishop(boardArray[row][col].color());
-                    case "King" -> tempCopy[row][col] = new King(boardArray[row][col].color());
-                    case "None" -> tempCopy[row][col] = new None(boardArray[row][col].color());
-                    case "Pawn" -> tempCopy[row][col] = new Pawn(boardArray[row][col].color());
-                    case "Queen" -> tempCopy[row][col] = new Queen(boardArray[row][col].color());
-                    case "Rook" -> tempCopy[row][col] = new Rook(boardArray[row][col].color());
-                }
+                tempCopy[row][col] = boardArray[row][col].copy();
             }
         }
-
         ArrayList<Point> toRemove = new ArrayList<>();
-        for (Point newLocation : moveSet){
+        for (Point newLocation : moveSet) {
+            tempPiece = tempCopy[newLocation.x][newLocation.y].copy();
             tempCopy[oldLocation.x][oldLocation.y] = new None('N');
-            switch (piece.getClass().getName().substring(12)){
-                case "Knight" -> tempCopy[newLocation.x][newLocation.y] = new Knight(piece.color());
-                case "Bishop" -> tempCopy[newLocation.x][newLocation.y] = new Bishop(piece.color());
-                case "King" -> tempCopy[newLocation.x][newLocation.y] = new King(piece.color());
-                case "None" -> tempCopy[newLocation.x][newLocation.y] = new None(piece.color());
-                case "Pawn" -> tempCopy[newLocation.x][newLocation.y] = new Pawn(piece.color());
-                case "Queen" -> tempCopy[newLocation.x][newLocation.y] = new Queen(piece.color());
-                case "Rook" -> tempCopy[newLocation.x][newLocation.y] = new Rook(piece.color());
-            }
+            tempCopy[newLocation.x][newLocation.y] = piece.copy();
 
             //schauen ob der nach dem zug immer noch schach wäre
             for(int col = 0; col < 8; col++) {
@@ -548,16 +532,23 @@ public class Board {
                     }
                 }
             }
-            tempCopy[newLocation.x][newLocation.y] = new None('N');
-            tempCopy[oldLocation.x][oldLocation.y] = piece;
-        }
-        getOutOfCheck = moveSet.size() - checkOptions;
+                tempCopy[newLocation.x][newLocation.y] = tempPiece;
+                tempCopy[oldLocation.x][oldLocation.y] = piece;
 
-        //unmögliche züge entfernen
-            for (Point a : toRemove){
-                moveSet.remove(a);
+        }
+        System.out.println(moveSet.size() + "---" + checkOptions);
+            getOutOfCheck = moveSet.size() - checkOptions;
+            if (checkOptions < moveSet.size()) {
+
+                //unmögliche züge entfernen
+                for (Point a : toRemove) {
+                    moveSet.remove(a);
+                }
+            } else {
+                moveSet.clear();
             }
-    }
+        }
+
     private int leftOverMoves(char color){
         int temp = 0;
         getOutOfCheck = 0;
@@ -574,4 +565,5 @@ public class Board {
         }
         return temp;
     }
+
 }

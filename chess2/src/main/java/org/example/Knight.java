@@ -64,4 +64,7 @@ public class Knight implements Pieces {
         kingInCheck(row -2,col -1, board);
         return returnChar;
     }
+    public Pieces copy(){
+        return new Knight(color);
+    }
 }

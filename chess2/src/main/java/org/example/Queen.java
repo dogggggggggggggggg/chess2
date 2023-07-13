@@ -74,7 +74,10 @@ public class Queen implements Pieces {
         kingInCheck(row +1, col,+1,0, board); //right
         kingInCheck(row -1, col,-1,0,board); //left
 
-        return returnChar;}
-
+        return returnChar;
+    }
+    public Pieces copy(){
+        return new Queen(color);
+    }
 
 }

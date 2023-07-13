@@ -11,4 +11,7 @@ public record None(char color) implements Pieces {
         char[] returnChar = new char[1];
         returnChar[0] = 'N' ;
         return returnChar;}
+    public Pieces copy(){
+        return new None('N');
+    }
 }

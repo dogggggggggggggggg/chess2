@@ -101,4 +101,7 @@ public class Rook implements Pieces {
         kingInCheck(row -1,col,-1,0,board,1); //left
         return returnChar;
     }
+    public Pieces copy(){
+        return new Rook(color);
+    }
 }

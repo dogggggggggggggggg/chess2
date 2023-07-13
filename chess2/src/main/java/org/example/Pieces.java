@@ -7,4 +7,5 @@ public interface Pieces {
     ArrayList<Point> move(Point location, Pieces[][] board);
     char color();
     char[] onMove(Point location, Pieces[][] board);
+    Pieces copy();
 }

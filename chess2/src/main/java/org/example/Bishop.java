@@ -65,4 +65,7 @@ public class Bishop implements Pieces {
         kingInCheck(row +1,col -1,+1,-1,board); //up right
         return returnChar;
     }
+    public Pieces copy(){
+        return new Bishop(color);
+    }
 }

@@ -69,4 +69,7 @@ public class King implements Pieces {
         returnChar[0] = 'N';
         return returnChar;
     }
+    public Pieces copy(){
+        return new King(color);
+    }
 }
